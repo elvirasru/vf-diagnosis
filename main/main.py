@@ -9,7 +9,7 @@ pd.set_option('display.width', 320)
 pd.set_option('display.max_columns', 20)
 
 
-def create_csv(db, seconds):
+def create_csv(db, frequency, seconds):
     users = get_users(db)
 
     complete_file = pd.DataFrame()
@@ -21,7 +21,7 @@ def create_csv(db, seconds):
 
         print("Calculate segments....")
         print("---------------------------------")
-        segments_df = to_segments(signal_annotations_df, user, db, 250, seconds)
+        segments_df = to_segments(signal_annotations_df, user, db, frequency, seconds)
         print(segments_df)
 
         complete_file = pd.concat([complete_file, segments_df])
@@ -32,10 +32,14 @@ def create_csv(db, seconds):
     add_variable(complete_file, lambda x: tf.count1_function(x), "count1")
     add_variable(complete_file, lambda x: tf.count2_function(x), "count2")
     add_variable(complete_file, lambda x: tf.count3_function(x), "count3")
+    add_variable(complete_file, lambda x: tf.threshold_crossing_sample_count(x, frequency, seconds), "tcsc")
+    add_variable(complete_file, lambda x: tf.standard_exponential(x, frequency), "exp")
+    add_variable(complete_file, lambda x: tf.modified_exponential(x, frequency), "modExp")
+    add_variable(complete_file, lambda x: tf.mean_absolute_value(x, frequency, seconds), "MAV")
     print(complete_file)
 
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-#create_csv('cudb', 4)
-#create_csv('vfdb', 4)
+#create_csv('cudb', 250, 4)
+#create_csv('vfdb', 250, 4)
