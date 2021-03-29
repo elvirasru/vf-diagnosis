@@ -5,8 +5,6 @@ from scipy import signal
 
 
 def to_segments(data_set, user_id, db, signal_frequency, seconds):
-    pd.options.mode.chained_assignment = None
-
     add_tags_by_group(data_set, seconds, signal_frequency, 'group')
 
     groups_with_nan = data_set[data_set['signal'].isna()]['group'].unique().tolist()
@@ -14,8 +12,7 @@ def to_segments(data_set, user_id, db, signal_frequency, seconds):
     data_set.reset_index(inplace=True)
     print("The following groups (containing NaN values) were excluded from " + user_id + ": " + str(groups_with_nan))
 
-    data_cleaned = clean(data_set['signal'], signal_frequency)
-    data_set['signal_prep'] = data_cleaned
+    data_set = data_set.assign(signal_prep=clean(data_set['signal'], signal_frequency))
 
     rest = add_tags_by_group(data_set, seconds, signal_frequency, 'new_group')
     data_set.drop(['signal', 'group'], axis=1, inplace=True)
@@ -44,7 +41,7 @@ def add_tags_by_group(data_set, seconds, signal_frequency, col_name):
     total_groups = total_rows // num_of_obs_in_4s
     p1 = np.repeat(np.linspace(1, total_groups, total_groups), num_of_obs_in_4s, axis=0)
     p2 = np.repeat(total_groups + 1, rest, axis=0)
-    data_set[col_name] = pd.Series(np.concatenate((p1, p2)))
+    data_set.insert(0, col_name, pd.Series(np.concatenate((p1, p2))))
     return rest
 
 
