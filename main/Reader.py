@@ -20,9 +20,7 @@ def get_users(db):
 
 def read_signal(user_id, db):
     record = wfdb.rdrecord(user_id, pn_dir=db + '/1.0.0/')
-    df = pd.DataFrame([s[0] for s in record.p_signal], columns=['signal'])
-    df.dropna(axis=0, inplace=True)
-    return df
+    return pd.DataFrame([s[0] for s in record.p_signal], columns=['signal'])
 
 
 def read_annotations(user_id, db):

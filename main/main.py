@@ -26,6 +26,8 @@ def create_csv(db, frequency, seconds):
 
         complete_file = pd.concat([complete_file, segments_df])
 
+    complete_file.reset_index(inplace=True)
+
     print("Calculate variables....")
     print("---------------------------------")
     add_variable(complete_file, lambda x: tf.first_function(x), "var1")
@@ -41,5 +43,5 @@ def create_csv(db, frequency, seconds):
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-#create_csv('cudb', 250, 4)
-#create_csv('vfdb', 250, 4)
+# create_csv('cudb', 250, 4)
+# create_csv('vfdb', 250, 4)
