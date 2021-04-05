@@ -1,6 +1,7 @@
-import TemporalFunctions as tf
 import pandas as pd
 
+from main.functions import TemporalFunctions as tf
+from main.functions import ComplexFunctions as cf
 from Reader import read_signal_annotations, get_users
 from Transformer import to_segments
 from Utils import add_variable
@@ -36,6 +37,9 @@ def create_csv(db, frequency, seconds):
     add_variable(complete_file, lambda x: tf.standard_exponential(x, frequency), "exp")
     add_variable(complete_file, lambda x: tf.modified_exponential(x, frequency), "modExp")
     add_variable(complete_file, lambda x: tf.mean_absolute_value(x, frequency, seconds), "MAV")
+    add_variable(complete_file, lambda x: cf.hilbert_function(x, frequency), "HILB")
+    add_variable(complete_file, lambda x: cf.phase_space_reconstruction_function(x, frequency), "PSR")
+    add_variable(complete_file, lambda x: cf.sample_entropy_function(x), "SampEn")
     print(complete_file)
 
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
