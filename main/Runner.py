@@ -29,10 +29,9 @@ def create_csv(db, frequency, seconds):
 
     print("Calculate variables....")
     print("---------------------------------")
-    add_variable(complete_file, lambda x: tf.first_function(x), "var1")
-    add_variable(complete_file, lambda x: tf.count1_function(x), "count1")
-    add_variable(complete_file, lambda x: tf.count2_function(x), "count2")
-    add_variable(complete_file, lambda x: tf.count3_function(x), "count3")
+    add_variable(complete_file, lambda x: tf.count1_function(x, frequency, seconds), "count1")
+    add_variable(complete_file, lambda x: tf.count2_function(x, frequency, seconds), "count2")
+    add_variable(complete_file, lambda x: tf.count3_function(x, frequency, seconds), "count3")
     add_variable(complete_file, lambda x: tf.threshold_crossing_sample_count(x, frequency, seconds), "tcsc")
     add_variable(complete_file, lambda x: tf.standard_exponential(x, frequency), "exp")
     add_variable(complete_file, lambda x: tf.modified_exponential(x, frequency), "modExp")
@@ -45,5 +44,5 @@ def create_csv(db, frequency, seconds):
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-#create_csv('cudb', 250, 4)
+create_csv('cudb', 250, 4)
 #create_csv('vfdb', 250, 4)
