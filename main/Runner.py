@@ -44,5 +44,5 @@ def create_csv(db, frequency, seconds):
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-create_csv('cudb', 250, 4)
+#create_csv('cudb', 250, 4)
 #create_csv('vfdb', 250, 4)
