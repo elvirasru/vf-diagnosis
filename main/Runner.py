@@ -2,6 +2,7 @@ import pandas as pd
 
 from main.functions import TemporalFunctions as tf
 from main.functions import ComplexFunctions as cf
+from main.functions import SpectralFunctions as sf
 from Reader import read_signal_annotations, get_users
 from Transformer import to_segments
 from Utils import add_variable
@@ -40,6 +41,7 @@ def create_csv(db, frequency, seconds):
     add_variable(complete_file, lambda x: cf.hilbert_function(x, frequency), "HILB")
     add_variable(complete_file, lambda x: cf.phase_space_reconstruction_function(x, frequency), "PSR")
     add_variable(complete_file, lambda x: cf.sample_entropy_function(x), "SampEn")
+    add_variable(complete_file, lambda x: sf.vf_leak_function(x), "VFLEAK")
     print(complete_file)
 
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
