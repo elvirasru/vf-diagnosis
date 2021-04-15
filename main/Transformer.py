@@ -5,19 +5,15 @@ from scipy import signal
 
 
 def to_segments(data_set, user_id, db, signal_frequency, seconds):
-    data_cleaned = clean(data_set['signal'], signal_frequency)
+    add_group_tag(data_set, seconds, signal_frequency)
 
-    total_rows = data_cleaned.size
-    num_of_obs_in_4s = signal_frequency * seconds
-    rest = total_rows % num_of_obs_in_4s
-    total_groups = total_rows // num_of_obs_in_4s
+    groups_with_nan = data_set[data_set['signal'].isna()]['group'].unique().tolist()
+    data_set = data_set[~data_set['group'].isin(groups_with_nan)]
+    data_set.reset_index(inplace=True)
+    print("The following groups (containing NaN values) were excluded from " + user_id + ": " + str(groups_with_nan))
 
-    p1 = np.repeat(np.linspace(1, total_groups, total_groups), num_of_obs_in_4s, axis=0)
-    p2 = np.repeat(total_groups + 1, rest, axis=0)
-
-    data_set['signal_prep'] = data_cleaned
+    data_set = data_set.assign(signal_prep=clean(data_set['signal'], signal_frequency))
     data_set.drop('signal', axis=1, inplace=True)
-    data_set['group'] = pd.Series(np.concatenate((p1, p2)))
 
     d1 = data_set.groupby('group')['annotation'].unique().reset_index()
     d1['annotation'] = d1['annotation'].apply(lambda y: stats.mode(y).mode[0])
@@ -30,10 +26,22 @@ def to_segments(data_set, user_id, db, signal_frequency, seconds):
     new_df['user_id'] = np.repeat(user_id, length)
     new_df['db'] = np.repeat(db, length)
 
-    if rest > 0:
+    if len(new_df['signal_prep'].iloc[-1]) < (signal_frequency * seconds):
         # elimina el conjunto que no tiene 1000 muestras
         return new_df[:-1]
     return new_df
+
+
+def add_group_tag(data_set, seconds, signal_frequency):
+    total_rows = data_set.shape[0]
+    num_of_obs = signal_frequency * seconds
+    total_groups = total_rows // num_of_obs
+    rest = total_rows % num_of_obs
+
+    partition_1 = np.repeat(np.linspace(1, total_groups, total_groups), num_of_obs, axis=0)
+    partition_2 = np.repeat(total_groups + 1, rest, axis=0)
+
+    data_set['group'] = pd.Series(np.concatenate((partition_1, partition_2)))
 
 
 def clean(data, signal_frequency):
