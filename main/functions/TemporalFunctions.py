@@ -2,57 +2,49 @@ import numpy as np
 from scipy import signal
 
 
-def first_function(array):
-    return array[0]
-
-
-def count1_function(sub_signal):
+def count1_function(sub_signal, frequency, time_window):
     b = [0.5, 0, -0.5]
     a = [8, -14, 7]
-    signal_filt = signal.filtfilt(b, a, sub_signal)
+    filtered_signal = signal.filtfilt(b, a, sub_signal)
+    signal_abs = np.abs(filtered_signal)
+
     count = 0
-    length_window = 4
-    frequency = 250
-    signal_abs = np.abs(signal_filt)
-    for n in range(0, length_window):
-        s = signal_abs[(n * frequency + 1):(n * frequency + frequency)]
+    for n in range(0, time_window):
+        s = signal_abs[(n * frequency):(n * frequency + frequency)]
         max_s = np.max(s)
 
         count += sum(s >= 0.5 * max_s)
-    return count / length_window
+    return count / time_window
 
 
-def count2_function(sub_signal):
+def count2_function(sub_signal, frequency, time_window):
     b = [0.5, 0, -0.5]
     a = [8, -14, 7]
-    signal_filt = signal.filtfilt(b, a, sub_signal)
+    filtered_signal = signal.filtfilt(b, a, sub_signal)
+    signal_abs = np.abs(filtered_signal)
+
     count = 0
-    length_window = 4
-    frequency = 250
-    signal_abs = np.abs(signal_filt)
-    for n in range(0, length_window):
-        s = signal_abs[(n * frequency + 1):(n * frequency + frequency)]
-        mean_s = np.mean(s)
+    for n in range(0, time_window):
+        s = signal_abs[(n * frequency):(n * frequency + frequency)]
 
-        count += sum(s >= mean_s)
-    return count / length_window
+        count += sum(s >= np.mean(s))
+    return count / time_window
 
 
-def count3_function(sub_signal):
+def count3_function(sub_signal, frequency, time_window):
     b = [0.5, 0, -0.5]
     a = [8, -14, 7]
-    signal_filt = signal.filtfilt(b, a, sub_signal)
+    filtered_signal = signal.filtfilt(b, a, sub_signal)
+    signal_abs = np.abs(filtered_signal)
+
     count = 0
-    length_window = 4
-    frequency = 250
-    signal_abs = np.abs(signal_filt)
-    for n in range(0, length_window):
-        s = signal_abs[(n * frequency + 1):(n * frequency + frequency)]
+    for n in range(0, time_window):
+        s = signal_abs[(n * frequency):(n * frequency + frequency)]
         mean_s = np.mean(s)
-        md_s = np.mean(np.abs(s - np.repeat(mean_s, len(s))))
+        md_s = np.mean(np.abs(s - mean_s))
 
         count += sum((s >= (mean_s - md_s)) & (s <= (mean_s + md_s)))
-    return count / length_window
+    return count / time_window
 
 
 def threshold_crossing_sample_count(sub_signal, frequency, time_window):
