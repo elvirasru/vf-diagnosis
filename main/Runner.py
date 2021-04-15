@@ -28,6 +28,8 @@ def create_csv(db, frequency, seconds):
 
         complete_file = pd.concat([complete_file, segments_df])
 
+    complete_file.reset_index(inplace=True)
+
     print("Calculate variables....")
     print("---------------------------------")
     add_variable(complete_file, lambda x: tf.count1_function(x, frequency, seconds), "count1")
