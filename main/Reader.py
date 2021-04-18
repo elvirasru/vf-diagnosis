@@ -26,5 +26,21 @@ def read_signal(user_id, db):
 
 def read_annotations(user_id, db):
     annotation = wfdb.rdann(user_id, 'atr', pn_dir=db)
-    notes = pd.Series(annotation.aux_note).apply(lambda x: np.nan if x == '' else x)
-    return pd.DataFrame({'annotation': notes, 'signalId': annotation.sample})
+    symbols = annotation.symbol
+    notes = annotation.aux_note
+
+    count = 0
+    annotations = []
+    for note in notes:
+        symbol = symbols[count]
+        if symbol == '[':
+            annotations.append('VF')
+        elif symbol == ']':
+            annotations.append("0")
+        elif note != '':
+            annotations.append(note)
+        else:
+            annotations.append(np.nan)
+        count += 1
+
+    return pd.DataFrame({'annotation': pd.Series(annotations), 'signalId': annotation.sample})
