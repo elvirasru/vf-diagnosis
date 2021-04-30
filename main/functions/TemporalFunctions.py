@@ -120,3 +120,20 @@ def mean_absolute_value(sub_signal, frequency, time_window):
         signal_window_2s = signal_window_2s / np.max(signal_window_2s)
         mav.append(np.mean(signal_window_2s))
     return np.mean(mav)
+
+
+def bcp(sub_signal, frequency):
+    sub_signal = np.array(sub_signal)
+    threshold = 0.0055
+    window_length = 2 * frequency
+    x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
+    x_d = np.append(x_d, x_d[-1])
+    number_of_windows = round(len(x_d) / window_length)
+
+    bCP = []
+    for i in range(0, number_of_windows):
+        window = x_d[i * window_length:(i + 1) * window_length]
+        normalized_window = window / max(window)
+        bCP.append(sum(normalized_window < threshold) / window_length)
+
+    return min(bCP)
