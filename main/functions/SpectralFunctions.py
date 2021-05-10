@@ -13,7 +13,7 @@ def vf_leak_function(sub_signal):
     return a / b
 
 
-def bwt(sub_signal, frequency, time_window):
+def bwt(sub_signal, frequency):
     sub_signal = np.array(sub_signal)
     length = len(sub_signal)
     window_duration = 2

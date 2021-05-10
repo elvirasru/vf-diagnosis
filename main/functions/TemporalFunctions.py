@@ -145,7 +145,7 @@ def x1(sub_signal, frequency):
     window_duration = 2
     window_length = 2 * frequency
     aMs = 100
-    bP = np.ones(1, round(aMs*frequency)/1000)
+    bP = np.ones((1, int(round(aMs*frequency)/1000)))
 
     x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
     x_d = np.append(x_d, x_d[-1])

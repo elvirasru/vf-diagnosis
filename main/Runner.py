@@ -12,7 +12,7 @@ pd.set_option('display.max_columns', 20)
 
 
 def create_csv(db, frequency, seconds):
-    users = get_users(db)
+    users = get_users(db)[1:3]
 
     complete_file = pd.DataFrame()
     for user in users:
@@ -40,16 +40,16 @@ def create_csv(db, frequency, seconds):
     add_variable(complete_file, lambda x: tf.modified_exponential(x, frequency), "modExp")
     add_variable(complete_file, lambda x: tf.mean_absolute_value(x, frequency, seconds), "MAV")
     add_variable(complete_file, lambda x: tf.bcp(x, frequency), "bCP")
-    add_variable(complete_file, lambda x: tf.x1(x), "x1")
+    add_variable(complete_file, lambda x: tf.x1(x, frequency), "x1")
     add_variable(complete_file, lambda x: cf.hilbert_function(x, frequency), "HILB")
     add_variable(complete_file, lambda x: cf.phase_space_reconstruction_function(x, frequency), "PSR")
     add_variable(complete_file, lambda x: cf.sample_entropy_function(x), "SampEn")
     add_variable(complete_file, lambda x: sf.vf_leak_function(x), "VFLEAK")
-    add_variable(complete_file, lambda x: sf.bwt(x), "bWT")
+    add_variable(complete_file, lambda x: sf.bwt(x, frequency), "bWT")
     print(complete_file)
 
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-#create_csv('cudb', 250, 4)
+create_csv('cudb', 250, 4)
 #create_csv('vfdb', 250, 4)
