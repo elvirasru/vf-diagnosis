@@ -1,5 +1,5 @@
 import pandas as pd
-#HOLA
+
 from main.functions import TemporalFunctions as tf
 from main.functions import ComplexFunctions as cf
 from main.functions import SpectralFunctions as sf
@@ -39,10 +39,12 @@ def create_csv(db, frequency, seconds):
     add_variable(complete_file, lambda x: tf.standard_exponential(x, frequency), "exp")
     add_variable(complete_file, lambda x: tf.modified_exponential(x, frequency), "modExp")
     add_variable(complete_file, lambda x: tf.mean_absolute_value(x, frequency, seconds), "MAV")
+    add_variable(complete_file, lambda x: tf.x1(x), "x1")
     add_variable(complete_file, lambda x: cf.hilbert_function(x, frequency), "HILB")
     add_variable(complete_file, lambda x: cf.phase_space_reconstruction_function(x, frequency), "PSR")
     add_variable(complete_file, lambda x: cf.sample_entropy_function(x), "SampEn")
     add_variable(complete_file, lambda x: sf.vf_leak_function(x), "VFLEAK")
+    add_variable(complete_file, lambda x: sf.bwt(x), "bWT")
     print(complete_file)
 
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)

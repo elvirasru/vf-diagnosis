@@ -120,3 +120,28 @@ def mean_absolute_value(sub_signal, frequency, time_window):
         signal_window_2s = signal_window_2s / np.max(signal_window_2s)
         mav.append(np.mean(signal_window_2s))
     return np.mean(mav)
+
+
+def x1(sub_signal, frequency):
+    sub_signal = np.array(sub_signal)
+    length = len(sub_signal)
+    window_duration = 2
+    window_length = 2 * frequency
+    aMs = 100
+    bP = np.ones(1, round(aMs*frequency)/1000)
+
+    x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
+    x_d = np.append(x_d, x_d[-1])
+
+    x_d = np.ones(1, window_duration * frequency)*x_d[:], np.transpose(np.ones(1, window_duration*frequency)*x_d[-1])
+    x_d = scipy.signal.filtfilt(bP, 1, x_d)
+    x_d = x_d(window_duration * frequency + x_d[0:length - 1] - window_duration * frequency)
+
+    prC = 10
+    x1 = np.percentile(x_d, prC)/max(x_d)
+
+    return (x1)
+
+
+
+
