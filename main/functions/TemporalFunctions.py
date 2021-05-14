@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import signal
-from Utils import prctile
 
 
 def count1_function(sub_signal, frequency, time_window):
@@ -149,10 +148,10 @@ def x1(sub_signal, frequency):
     x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
     x_d = np.append(x_d, x_d[-1])
 
-    x_d = np.append(np.ones((1, window_length)) * sub_signal[0], sub_signal)
-    x_d = np.append(x_d, np.ones((1, window_length)) * sub_signal[-1])
+    x_d = np.append(np.ones((1, window_length)) * x_d[0], x_d)
+    x_d = np.append(x_d, np.ones((1, window_length)) * x_d[-1])
 
     x_d = signal.filtfilt(bP, 1, x_d)
     x_d = x_d[(window_length + 1): -(window_length - 1)]
 
-    return prctile(x_d, 10) / max(x_d)
+    return np.percentile(x_d, 10) / max(x_d)
