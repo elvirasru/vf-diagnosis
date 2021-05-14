@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import signal
+from Utils import prctile
 
 
 def vf_leak_function(sub_signal):
@@ -32,6 +33,6 @@ def bwt(sub_signal, frequency):
     for i in range(0, number_of_windows):
         window = x_d[i * window_length:(i + 1) * window_length]
         window = window / max(abs(window))
-        bWT.append(np.percentile(window, 50 + valPT / 2) - np.percentile(window, 50 - valPT / 2))
+        bWT.append(prctile(window, 50 + valPT / 2) - prctile(window, 50 - valPT / 2))
 
     return max(bWT)

@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import signal
+from Utils import prctile
 
 
 def count1_function(sub_signal, frequency, time_window):
@@ -154,4 +155,4 @@ def x1(sub_signal, frequency):
     x_d = signal.filtfilt(bP, 1, x_d)
     x_d = x_d[(window_length + 1): -(window_length - 1)]
 
-    return np.percentile(x_d, 10) / max(x_d)
+    return prctile(x_d, 10) / max(x_d)
