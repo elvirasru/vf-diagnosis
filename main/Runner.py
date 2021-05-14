@@ -12,7 +12,7 @@ pd.set_option('display.max_columns', 20)
 
 
 def create_csv(db, frequency, seconds):
-    users = get_users(db)[1:3]
+    users = get_users(db)
 
     complete_file = pd.DataFrame()
     for user in users:
@@ -51,5 +51,5 @@ def create_csv(db, frequency, seconds):
     complete_file.to_csv(db + '-' + str(seconds) + "s.csv", index=False, header=True)
 
 
-create_csv('cudb', 250, 4)
+#create_csv('cudb', 250, 4)
 #create_csv('vfdb', 250, 4)
