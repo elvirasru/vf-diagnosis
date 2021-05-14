@@ -1,6 +1,5 @@
 import numpy as np
 from scipy import signal
-from Utils import prctile
 
 
 def vf_leak_function(sub_signal):
