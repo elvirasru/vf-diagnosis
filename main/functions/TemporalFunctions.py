@@ -137,3 +137,21 @@ def bcp(sub_signal, frequency):
         bCP.append(sum(normalized_window < threshold) / window_length)
 
     return min(bCP)
+
+
+def x1(sub_signal, frequency):
+    sub_signal = np.array(sub_signal)
+    window_length = 2 * frequency
+    aMs = 100
+    bP = np.ones(round(aMs * frequency / 1000))
+
+    x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
+    x_d = np.append(x_d, x_d[-1])
+
+    x_d = np.append(np.ones((1, window_length)) * x_d[0], x_d)
+    x_d = np.append(x_d, np.ones((1, window_length)) * x_d[-1])
+
+    x_d = signal.filtfilt(bP, 1, x_d)
+    x_d = x_d[(window_length + 1): -(window_length - 1)]
+
+    return np.percentile(x_d, 10) / max(x_d)
