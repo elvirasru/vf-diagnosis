@@ -155,3 +155,24 @@ def x1(sub_signal, frequency):
     x_d = x_d[(window_length + 1): -(window_length - 1)]
 
     return np.percentile(x_d, 10) / max(x_d)
+
+
+def x2(sub_signal, frequency):
+    sub_signal = np.array(sub_signal)
+    window_length = 2 * frequency
+    aMs = 100
+    bP = np.ones(round(aMs * frequency / 1000))
+
+    x_d = (sub_signal[1:] - sub_signal[0:len(sub_signal) - 1]) ** 2
+    x_d = np.append(x_d, x_d[-1])
+
+    x_d = np.append(np.ones((1, window_length)) * x_d[0], x_d)
+    x_d = np.append(x_d, np.ones((1, window_length)) * x_d[-1])
+
+    x_d = signal.filtfilt(bP, 1, x_d)
+    x_d = x_d[(window_length + 1): -(window_length - 1)]
+
+    min_amplitude = 0.1 * max(x_d)
+    min_distance = frequency / 10
+    peaks, properties = signal.find_peaks(x_d, height=min_amplitude, distance=min_distance)
+    return len(peaks)
