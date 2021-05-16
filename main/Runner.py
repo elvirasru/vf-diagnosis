@@ -47,7 +47,6 @@ def create_csv(db, frequency, seconds):
     add_variable(complete_file, lambda x: cf.sample_entropy_function(x), "SampEn")
     add_variable(complete_file, lambda x: sf.vf_leak_function(x), "VFLEAK")
     add_variable(complete_file, lambda x: sf.bwt(x, frequency), "bWT")
-    add_variable(complete_file, lambda x: sf.x3(x, frequency, seconds), "x3")
     add_variable(complete_file, lambda x: sf.x4(x, frequency, seconds), "x4")
     add_variable(complete_file, lambda x: sf.x5(x, frequency, seconds), "x5")
     print(complete_file)
