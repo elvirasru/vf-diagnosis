@@ -38,29 +38,6 @@ def bwt(sub_signal, frequency):
     return max(bWT)
 
 
-def x3(sub_signal, frequency, time_window):
-    sub_signal = np.array(sub_signal)
-    n_fft = 2048
-    fft_signal = fft(sub_signal * np.hamming(time_window * frequency), n_fft)
-    fft_signal = np.fft.fftshift(fft_signal)
-
-    ff = np.linspace(-frequency / 2, frequency / 2, n_fft)
-    Pss = abs(fft_signal) ** 2
-
-    dif = ff[1] - ff[0]
-    area = sum(Pss * dif) / 2
-    Pss = Pss / area
-
-    indexes_1_30 = np.argwhere((ff > 0) & (ff < 30))
-    f = ff[indexes_1_30][:, 0]
-    Pss = Pss[indexes_1_30][:, 0]
-
-    indexes = np.argwhere((f >= 1) & (f <= 10))
-    argmax = np.argmax(Pss[indexes])
-
-    return f[indexes[argmax]][0]
-
-
 def x4(sub_signal, frequency, time_window):
     sub_signal = np.array(sub_signal)
     n_fft = 2048
